@@ -1,6 +1,6 @@
 import React from "react";
 
-const Content = () => {
+function Filter() {
   return (
     <div id="filter" class="content__wrapper spacer">
       <h1 class="search__info extra-h1">
@@ -18,6 +18,6 @@ const Content = () => {
       </div>
     </div>
   );
-};
+}
 
-export default Content;
+export default Filter;
