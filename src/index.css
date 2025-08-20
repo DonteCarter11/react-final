@@ -7,6 +7,9 @@
   font-family: "Open Sans", sans-serif;
   z-index: 1;
 }
+html body {
+  max-width: 100%;
+}
 
 a {
   display: inline;
@@ -25,7 +28,7 @@ li {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 10px 24px;
 }
 
 h1 {
@@ -64,7 +67,7 @@ input {
   max-width: 800px;
   height: 60px;
   font-size: 20px;
-  padding-left: 20px;
+  /* padding-left: 20px; */
 }
 
 #filter {
@@ -132,8 +135,6 @@ nav {
   border-bottom: 2px solid transparent;
   position: relative;
   color: white;
-}
-.nav__link--anchor {
 }
 
 .nav__links .nav__link--btn {
@@ -235,7 +236,7 @@ nav {
   background-size: cover;
   background-attachment: fixed;
   width: 100%;
-  height: 35%;
+  height: 40%;
   position: absolute;
   top: 0;
   left: 0;
@@ -750,7 +751,7 @@ button {
 /* Loading state - disables hover and changes color */
 .search-btn--loading,
 .search-btn:disabled {
-      background-color: #0a1f44;
+  background-color: #0a1f44;
   color: rgba(255, 255, 255, 0.8);
   cursor: not-allowed;
   transform: none !important;
@@ -760,7 +761,7 @@ button {
 /* Ensure hover effects are disabled for loading state */
 .search-btn--loading:hover,
 .search-btn:disabled:hover {
-     background-color: #0a1f44;
+  background-color: #0a1f44;
   transform: none !important;
   box-shadow: none !important;
   cursor: not-allowed !important;
@@ -772,8 +773,12 @@ button {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* 
@@ -784,31 +789,96 @@ Small screens
 
 .menu {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(3, 1fr);
-  grid-column-gap: 2px;
-  grid-row-gap: 2px;
-  height: 27px;
-  width: 27px;
-  padding: 5px;
+  grid-template-columns: repeat(3, 8px); /* 3 columns */
+  grid-gap: 6px; /* spacing between dots */
+  padding: 10px;
   cursor: pointer;
 }
 
+.menu__backdrop {
+  position: absolute;
+  background-color: #242424;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  visibility: hidden;
+  transition: all 300ms ease;
+  opacity: 0;
+  transform: translate(100%);
+}
+
+.menu--open {
+  max-height: 100vh;
+  overflow: hidden;
+}
+
+.menu--open .menu__backdrop {
+  visibility: visible;
+  opacity: 1;
+  transform: translate(0);
+}
+
+.menu__links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.menu__list {
+  padding: 32px 0;
+}
+
+.menu__link {
+  color: white;
+  font-size: 40px;
+}
+
+.btn__menu--close {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  padding: 8px;
+  color: white;
+}
+
+.btn__menu {
+  background-color: transparent;
+  font-size: 32px;
+  border: none;
+  color: #f6f5f8;
+  display: none;
+  z-index: 100;
+}
+
+@media (max-width: 550px) {
+  .btn__menu {
+    display: block;
+  }
+}
+
 .item {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: white;
+  width: 8px;
+  height: 8px;
+  background-color: #6030b1;
+  border-radius: 50%; /* make them circles */
+  transition: background 0.2s ease;
   overflow: hidden;
 }
 
 .show__animation:active {
-  animation: spinner 70ms ease-in-out forwards;
+  animation: spinner 500ms ease-in-out forwards;
 }
 
 #phone__nav {
   display: none;
   position: relative;
+  padding-right: 20px;
+  display: none;
 }
 
 @media (max-height: 1200px) {
@@ -819,7 +889,9 @@ Small screens
 
 @media (max-width: 750px) {
   #phone__nav {
-    display: block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .nav__link {
@@ -846,4 +918,155 @@ Small screens
 }
 .spinner-icon {
   animation: spin 1s linear infinite;
+}
+
+/*
+Digimon Card
+*/
+.digi-card {
+  width: 25%;
+}
+
+.digi-img {
+  width: 50%;
+  justify-content: center;
+}
+
+.digi-name {
+  color: black;
+}
+
+h3 {
+  font-size: 25px;
+  font-family: "Orbitron";
+}
+
+.digi-level {
+  color: black;
+  padding-top: 0;
+  font-family: "Orbitron";
+}
+
+.details {
+  color: black;
+  font-size: 12px;
+}
+
+.detail__page {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: #f5f7fa;
+  color: #333;
+  margin: 0;
+  padding: 15px;
+}
+
+.card-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+}
+
+.card-container img {
+  width: 220px;
+  height: auto;
+  border-radius: 12px;
+  object-fit: contain;
+  background: #f0f0f0;
+  padding: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.digimon-info {
+  flex: 1;
+  padding: 0 16px;
+}
+.digimon-info h2 {
+  font-size: 1.6rem;
+  margin-bottom: 15px;
+  border-bottom: 2px solid #6030b1;
+  padding-bottom: 6px;
+}
+.digimon-info p {
+  font-size: 1rem;
+  margin: 8px 0;
+}
+.digimon-info p strong {
+  color: #6030b1;
+  font-weight: 600;
+}
+select {
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  margin: 10px 0 20px;
+  cursor: pointer;
+  background: #fff;
+  transition: border 0.2s;
+}
+
+select:hover {
+  border-color: #6030b1;
+}
+
+.description {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-top: 12px;
+  color: #444;
+  padding: 15px;
+  border-left: 4px solid #6030b1;
+  background: #f9fcff;
+  border-radius: 8px;
+}
+
+.detail__name {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+}
+
+/* .skeleton {
+  background-color: rgb(227, 227, 227) !important;
+  margin-bottom: 8px;
+} */
+
+.back-btn {
+  padding: 15px 22px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  color: #fff;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+.back-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 550px) {
+  .card-container h1{
+    width: 100%;
+    font-size: 25px;
+  }
+  .egg{
+   display: none;
+  }
 }

@@ -2,16 +2,33 @@ import React, { useState } from "react";
 import DigiLogo from "../assets/68Yh5vE.gif";
 import { FaSpinner, FaSearch } from "react-icons/fa";
 import SearchAnimationGif from "../assets/does-anyone-know-if-there-is-a-gabumon-gif-like-this-one-v0-9e904pfzntwb1.gif";
+import { useNavigate } from "react-router-dom";
+import { useSearch } from "./Context/SearchContext";
 
 function Landing() {
   const [isSearching, setIsSearching] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [localQuery, setLocalQuery] = useState("");
+  const navigate = useNavigate();
+  const { triggerSearch } = useSearch();
 
   const handleSearch = () => {
     if (isSearching) return;
+
     setIsSearching(true);
-    setTimeout(() => setIsSearching(false), 4000);
+
+    triggerSearch(localQuery);
+
+    setTimeout(() => {
+      setIsSearching(false);
+      navigate("/cards");
+    }, 4000);
   };
+
+  const handleKeyPress = (e) => {
+    if(e.key === 'Enter') {
+      handleSearch()
+    }
+  }
 
   return (
     <section id="landing__page">
@@ -32,7 +49,8 @@ function Landing() {
           </div>
           <div style={{ width: "100%", textAlign: "center" }}>
             <h2>
-              Find your favorite Digimon with <span className="purple">BLINKER</span>
+              Find your favorite Digimon with{" "}
+              <span className="purple">BLINKER</span>
             </h2>
           </div>
           <div style={{ width: "100%" }}>
@@ -42,8 +60,9 @@ function Landing() {
                   className="in"
                   type="text"
                   placeholder="Search by Name"
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyPress={(e) => e.key === "Enter" && handleSearch()}
+                  onChange={(e) => setLocalQuery(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  disabled={isSearching}
                 />
                 <button
                   className={`search-btn ${
@@ -84,11 +103,11 @@ function Landing() {
             marginTop: "2rem",
           }}
         >
-          <img
+          <img className="egg"
             src={DigiLogo}
             alt=""
             style={{
-              width: "150px",
+              width: "100px",
               height: "auto",
               display: "block",
             }}

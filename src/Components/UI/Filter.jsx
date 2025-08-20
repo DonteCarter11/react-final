@@ -2,14 +2,14 @@ import React from "react";
 
 function Filter() {
   return (
-    <div id="filter" class="content__wrapper spacer">
-      <h1 class="search__info extra-h1">
-        <span class="black-txt">Search results:</span>
-        <span class="search__term"></span>
+    <div id="filter" className="content__wrapper spacer">
+      <h1 className="search__info extra-h1">
+        <span className="black-txt">Search results:</span>
+        <span className="search__term"></span>
       </h1>
-      <div class="price__filter">
+      <div className="price__filter">
         <h2>
-          Level Range: <span class="purple">Fresh to Mega</span>
+          Level Range: <span className="purple">Fresh to Mega</span>
         </h2>
         <label id="levelSlider">
           Filter by Level: <span id="selectedLevel"></span>

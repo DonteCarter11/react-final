@@ -1,18 +1,28 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Overlay from "./Overlay";
+import { useSearch } from "./Context/SearchContext";
+import { useNavigate } from "react-router-dom";
 
 function DigimonApp() {
+  // Get search state from context
+  const { searchQuery: contextSearchQuery, searchTriggered } = useSearch();
+
   // State management
   const [allDigimon, setAllDigimon] = useState([]);
   const [filteredDigimon, setFilteredDigimon] = useState([]);
   const [uniqueLevels, setUniqueLevels] = useState(["All"]);
   const [selectedLevel, setSelectedLevel] = useState("All");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [localSearchQuery, setLocalSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [sliderValue, setSliderValue] = useState(0);
   const [showNoResults, setShowNoResults] = useState(false);
-  const [activeSearch, setActiveSearch] = useState("");
+
+  const navigate = useNavigate();
+
+  const handleDigimonClick = (digimon) => {
+    navigate(`/cards/${digimon.name.toLowerCase()}`);
+  };
 
   // Fetch data and initialize
   useEffect(() => {
@@ -23,9 +33,9 @@ function DigimonApp() {
         );
         setAllDigimon(data);
         setFilteredDigimon(data);
-        
+
         // Get unique levels
-        const levelsFromData = [...new Set(data.map(d => d.level))];
+        const levelsFromData = [...new Set(data.map((d) => d.level))];
         setUniqueLevels(["All", ...levelsFromData]);
       } catch (error) {
         console.error("Error fetching Digimon:", error);
@@ -37,17 +47,29 @@ function DigimonApp() {
     fetchData();
   }, []);
 
-  // Apply filters whenever activeSearch or level changes
+  // Apply filters from context when search is triggered
   useEffect(() => {
-    const filtered = allDigimon.filter(d => {
-      const matchName = d.name.toLowerCase().includes(activeSearch.toLowerCase());
-      const matchLevel = selectedLevel === "All" || d.level === selectedLevel;
+    if (searchTriggered && contextSearchQuery !== undefined) {
+      setLocalSearchQuery(contextSearchQuery);
+      applyFilters(contextSearchQuery, selectedLevel);
+    }
+  }, [searchTriggered, contextSearchQuery, selectedLevel, allDigimon]);
+
+  // Apply filters for local search changes
+  useEffect(() => {
+    applyFilters(localSearchQuery, selectedLevel);
+  }, [localSearchQuery, selectedLevel, allDigimon]);
+
+  const applyFilters = (searchTerm, level) => {
+    const filtered = allDigimon.filter((d) => {
+      const matchName = d.name.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchLevel = level === "All" || d.level === level;
       return matchName && matchLevel;
     });
-    
+
     setFilteredDigimon(filtered);
     setShowNoResults(filtered.length === 0);
-  }, [activeSearch, selectedLevel, allDigimon]);
+  };
 
   // Update slider label and selected level
   const handleSliderChange = (e) => {
@@ -59,19 +81,19 @@ function DigimonApp() {
   // Handle form submission (Enter key)
   const handleSearchSubmit = (e) => {
     e.preventDefault();
-    setActiveSearch(searchQuery);
+    applyFilters(localSearchQuery, selectedLevel);
   };
 
   // Handle search button click
   const handleSearchClick = (e) => {
     e.preventDefault();
-    setActiveSearch(searchQuery);
+    applyFilters(localSearchQuery, selectedLevel);
   };
 
   // Handle Enter key press in input field
   const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      setActiveSearch(searchQuery);
+    if (e.key === "Enter") {
+      applyFilters(localSearchQuery, selectedLevel);
     }
   };
 
@@ -89,14 +111,14 @@ function DigimonApp() {
                   id="search"
                   type="text"
                   placeholder="Search by Name"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  value={localSearchQuery}
+                  onChange={(e) => setLocalSearchQuery(e.target.value)}
                   onKeyPress={handleKeyPress}
                   aria-label="Search Digimon by name"
                 />
                 <div className="search__wrapper">
-                  <button 
-                    type="submit" 
+                  <button
+                    type="submit"
                     className="search-button"
                     onClick={handleSearchClick}
                   >
@@ -129,7 +151,7 @@ function DigimonApp() {
         <h1 className="search__info extra-h1">
           <span className="black-txt">Search results:</span>
           <span className="search__term">
-            {activeSearch ? ` "${activeSearch}"` : " All Digimon"}
+            {localSearchQuery ? ` "${localSearchQuery}"` : " All Digimon"}
             {selectedLevel !== "All" ? ` (Level: ${selectedLevel})` : ""}
           </span>
         </h1>
@@ -165,13 +187,22 @@ function DigimonApp() {
       )}
 
       {/* Data Display Section */}
-      <div className="user__list" style={{ display: isLoading ? "none" : "flex" }}>
+      <div
+        className="user__list"
+        style={{ display: isLoading ? "none" : "flex" }}
+      >
         {filteredDigimon.map((digimon) => (
-          <div key={`${digimon.name}-${digimon.level}`} className="user-card">
-            <h3>{digimon.name}</h3>
-            <img src={digimon.img} alt={digimon.name} />
-            <p>Level: {digimon.level}</p>
-          </div>
+          <button
+            key={`${digimon.name}-${digimon.level}`}
+            className="user-card digi-card"
+            onClick={() => handleDigimonClick(digimon)}
+          >
+            <div>
+              <h3 className="digi-name">{digimon.name}</h3>
+              <img className="digi-img" src={digimon.img} alt={digimon.name} />
+              <p className="digi-level">Level: {digimon.level}</p>
+            </div>
+          </button>
         ))}
       </div>
     </div>
